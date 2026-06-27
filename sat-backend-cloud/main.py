@@ -110,6 +110,31 @@ QUESTION_SHAPE_PATTERN = re.compile(
 OPTION_PATTERN = re.compile(r'\(([A-D])\)\s*([^()]+?)(?=\s*\([A-D]\)|$)')
 NUMBER_PATTERN = re.compile(r'[-+]?\d[\d,]*\.?\d*')
 
+# NEW: catches the "30x = 30x" failure mode - a word problem whose own
+# numbers reduce to an equation that's true for every value of x (or, with
+# unequal coefficients, collapses to a trivial x=0). Either way, the model
+# asserting a specific non-zero answer from a same-coefficient equation is
+# invalid algebra, regardless of whether that asserted number happens to
+# match one of the four options. This is a different failure than a wrong
+# letter: the question's numbers themselves don't produce a unique answer.
+DEGENERATE_EQUATION_PATTERN = re.compile(
+    r'([-+]?\d*\.?\d*)\s*x\s*=\s*([-+]?\d*\.?\d*)\s*x\b',
+    re.IGNORECASE
+)
+
+
+def _coef_to_float(raw: str) -> float:
+    """Turns a coefficient string from the regex above into a float.
+    Handles the implicit-1 cases regex naturally produces: '' -> 1, '-' -> -1, '+' -> 1."""
+    if raw in ("", "+"):
+        return 1.0
+    if raw == "-":
+        return -1.0
+    try:
+        return float(raw)
+    except ValueError:
+        return 0.0
+
 
 def verify_math_answer(full_text: str) -> Tuple[str, str]:
     """
@@ -120,9 +145,11 @@ def verify_math_answer(full_text: str) -> Tuple[str, str]:
                           matches the declared Answer letter
       'fixed'           - the Answer letter was wrong; corrected it to match
                           the option the explanation's own math points to
-      'unresolved'       - the explanation's final computed number matches
-                          NONE of the four options - the model's arithmetic
-                          itself is wrong, not just the letter. Caller should
+      'unresolved'       - either the explanation's final computed number
+                          matches NONE of the four options, OR the
+                          explanation derives its answer from a degenerate
+                          equation (same coefficient on both sides of "x")
+                          that has no unique solution. Caller should
                           consider a retry.
     """
     match = QUESTION_SHAPE_PATTERN.search(full_text)
@@ -142,6 +169,21 @@ def verify_math_answer(full_text: str) -> Tuple[str, str]:
 
     declared_match = re.search(r'([A-D])', answer_raw)
     declared_letter = declared_match.group(1) if declared_match else None
+
+    # NEW: degenerate-equation check runs first - if the underlying algebra
+    # is broken, it doesn't matter whether the asserted number happens to
+    # match an option; the question itself has no unique answer.
+    for left_raw, right_raw in DEGENERATE_EQUATION_PATTERN.findall(explanation):
+        left_val = _coef_to_float(left_raw)
+        right_val = _coef_to_float(right_raw)
+        if abs(left_val - right_val) < 1e-9:
+            print(
+                f"⚠️ Self-consistency check: explanation contains a degenerate equation "
+                f"({left_raw or '1'}x = {right_raw or '1'}x) with no unique solution. "
+                f"Flagging for retry.",
+                flush=True
+            )
+            return full_text, "unresolved"
 
     # The model's own final computed number - the value after the LAST
     # "=" sign in its explanation (e.g. "...63 + 12 = 75 points" -> "75")
@@ -331,9 +373,11 @@ async def chat_with_tutor(request: ChatRequest):
                 if status == "unresolved":
                     print("🔁 Retrying math question generation once due to self-consistency mismatch...", flush=True)
                     retry_prompt = prompt + (
-                        "Important: in your previous attempt, your final computed answer did not "
-                        "match any of the four listed options. Recompute carefully and make sure "
-                        "the Answer line exactly matches one of (A)-(D).\n"
+                        "Important: in your previous attempt, either your final computed answer "
+                        "did not match any of the four listed options, or the equation you set up "
+                        "reduced to the same expression on both sides (no unique solution). Choose "
+                        "numbers that produce a clean equation with exactly one solution, recompute "
+                        "carefully, and make sure the Answer line exactly matches one of (A)-(D).\n"
                     )
                     try:
                         retry_response = llm(
