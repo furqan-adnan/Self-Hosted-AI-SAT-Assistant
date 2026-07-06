@@ -15,7 +15,7 @@ A full-stack, API-free AI study assistant that answers questions from SAT study 
 ---
 
 
-![AI Chat Interface](assets/s2.png)
+![AI Chat Interface](assets/s1.png)
 
 
 
