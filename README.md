@@ -112,16 +112,14 @@ This enabled the entire project to be built and deployed at **$0 cost** while re
 
 ---
 
-## Future Improvements 
----
-Add frontend note upload
-Add persistent user accounts
-Add source citations for retrieved notes
-Improve mobile performance
-Add model switching between smaller and larger models
-Add quiz history and scoring
-Add flashcard generation
-Add hybrid retrieval with embeddings
----
+## Future Improvements
 
+* Add frontend note upload
+* Add persistent user accounts
+* Add source citations for retrieved notes
+* Improve mobile performance
+* Add model switching between smaller and larger models
+* Add quiz history and scoring
+* Add flashcard generation
+* Add hybrid retrieval with embeddings
 
