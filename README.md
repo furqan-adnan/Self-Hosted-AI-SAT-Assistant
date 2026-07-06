@@ -14,6 +14,12 @@ A full-stack, API-free AI study assistant that answers questions from SAT study 
 
 ---
 
+
+![AI Chat Interface](assets/s2.png)
+
+
+
+
 ## Project Goal
 
 The goal of this project was to build a private, self-hosted SAT assistant that can answer from my own study material without using paid AI APIs.
