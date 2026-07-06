@@ -26,6 +26,7 @@ The goal of this project was to build a private, self-hosted SAT assistant that 
 
 Instead of sending prompts to an external model provider, the app runs a quantized open-source model directly inside a Hugging Face Space and combines it with a lightweight custom RAG pipeline.
 
+The webapp is fully deployed and working. Fast SAT math practice is optimized through programmatic generation, while full RAG + Gemma 9B responses run on free CPU hardware and may take longer.
 
 ---
 
