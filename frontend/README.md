@@ -11,6 +11,16 @@
 
 A full-stack, API-free AI study assistant that answers questions from SAT study materials using **OCR**, **BM25 retrieval**, and a **self-hosted Gemma 2 (9B GGUF) Large Language Model**. The project is built entirely with open-source technologies and does not rely on commercial AI APIs such as OpenAI, Gemini, or Claude.
 
+
+---
+
+## Project Goal
+
+The goal of this project was to build a private, self-hosted SAT assistant that can answer from my own study material without using paid AI APIs.
+
+Instead of sending prompts to an external model provider, the app runs a quantized open-source model directly inside a Hugging Face Space and combines it with a lightweight custom RAG pipeline.
+
+
 ---
 
 ##  Features
@@ -23,6 +33,8 @@ A full-stack, API-free AI study assistant that answers questions from SAT study 
 -  Real-time streaming AI responses
 -  React + TypeScript frontend
 -  100% API-free architecture
+-  Programmatic math-question generation for fast practice prompts
+- Docker-based Hugging Face Spaces deployment
 
 ---
 
@@ -40,10 +52,19 @@ A full-stack, API-free AI study assistant that answers questions from SAT study 
 - BM25
 - OCR
 - NumPy
+- Gemma 2 9B GGUF
+
+### Document Processing
+
+- OCR from scanned SAT notes
+- PDF/image-to-text preprocessing
+- JSON corpus generation
+
+
+---
 
 **Deployment**
-- Hugging Face Spaces (Free CPU Tier)
-- 
+Hugging Face Spaces (Free CPU Tier)
 
 ---
 
@@ -70,7 +91,7 @@ Scanned SAT Notes
 
 ---
 
-## ⚙️ How It Works
+##  How It Works
 
 1. I uploaded my SAT NOTES IN pdf and converted to jpeg.
 2. OCR extracts machine-readable text from the documents.
@@ -81,7 +102,7 @@ Scanned SAT Notes
 
 ---
 
-## ☁️ Deployment
+##  Deployment
 
 Running a 9B parameter language model locally exhausted my laptop's RAM and CPU resources. To overcome this, I deployed the FastAPI backend and the quantized Gemma 2 model to **Hugging Face Spaces** using the **free CPU hosting tier (2 vCPUs)**.
 
@@ -91,6 +112,39 @@ This enabled the entire project to be built and deployed at **$0 cost** while re
 
 ---
 
-## Featured
+## Future Improvements 
+---
+Add frontend note upload
+Add persistent user accounts
+Add source citations for retrieved notes
+Improve mobile performance
+Add model switching between smaller and larger models
+Add quiz history and scoring
+Add flashcard generation
+Add hybrid retrieval with embeddings
+---
+
+## Project Structure
+---
+SAT-AI-TUTOR/
+├── frontend/
+│   ├── src/
+│   ├── public/
+│   ├── package.json
+│   └── vite.config.ts
+│
+├── sat-backend-cloud/
+│   ├── main.py
+│   ├── Dockerfile
+│   ├── requirements.txt
+│   ├── cloud_corpus.json
+│   ├── make_corpus.py
+│   └── build_keyword_index.py
+│
+└── README.md
+---
+
+
+
 
 
