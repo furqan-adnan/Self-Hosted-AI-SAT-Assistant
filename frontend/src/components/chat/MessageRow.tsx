@@ -1,7 +1,7 @@
 import ReactMarkdown from 'react-markdown';
 import QuestionCard from '../question/QuestionCard';
 import { parseQuestionCard } from '../question/parseQuestion';
-import { Message } from '../../types';
+import type { Message } from '../../types';
 
 export default function MessageRow({ msg, isStreaming, isLast }: { msg: Message; isStreaming: boolean; isLast: boolean }) {
   const showCursor = isStreaming && isLast;

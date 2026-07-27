@@ -6,6 +6,7 @@ import numpy as np
 from typing import Tuple
 from rank_bm25 import BM25Okapi
 from app.config import settings
+from app.core.logger import logger
 from app.core.tokenizer import regex_tokenize, BM25_STOPWORDS, VALID_DOMAINS
 
 corpus = []
@@ -18,12 +19,12 @@ if os.path.exists(settings.CORPUS_PATH):
         
         tokenized_corpus = [regex_tokenize(doc["text"]) for doc in corpus]
         bm25 = BM25Okapi(tokenized_corpus)
-        print(f"✅ RAG Engine Active: Loaded {len(corpus)} full-page text nodes.", flush=True)
+        logger.info(f"RAG Engine Active: Loaded {len(corpus)} full-page text nodes.")
         
     except Exception as e:
-        print(f"⚠️ Failed to compile RAG index: {e}", flush=True)
+        logger.error(f"Failed to compile RAG index: {e}")
 else:
-    print(f"⚠️ '{settings.CORPUS_PATH}' not found. Operating in standard tutor mode.", flush=True)
+    logger.warning(f"'{settings.CORPUS_PATH}' not found. Operating in standard tutor mode.")
 
 def retrieve_context(message: str) -> Tuple[str, bool]:
     context_str = ""

@@ -14,6 +14,6 @@ class Settings:
     CONTEXT_TRUNCATION_LENGTH = int(os.environ.get("CONTEXT_TRUNCATION_LENGTH", "250"))
     STREAM_CHUNK_SIZE = int(os.environ.get("STREAM_CHUNK_SIZE", "24"))
     HISTORY_TRUNCATION_LENGTH = int(os.environ.get("HISTORY_TRUNCATION_LENGTH", "80"))
-    CORS_ORIGINS = ["*"]
+    CORS_ORIGINS = os.environ.get("CORS_ORIGINS", "https://huggingface.co").split(",")
 
 settings = Settings()

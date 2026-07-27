@@ -5,3 +5,5 @@ huggingface_hub
 rank_bm25
 numpy
 llama-cpp-python
+pytest
+httpx

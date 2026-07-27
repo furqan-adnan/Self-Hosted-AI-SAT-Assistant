@@ -399,7 +399,7 @@ class CanvAscii {
     this.textCanvas.render();
     this.texture.needsUpdate = true;
 
-    this.mesh.material.uniforms.uTime.value = Math.sin(time);
+    (this.mesh.material as THREE.ShaderMaterial).uniforms.uTime.value = Math.sin(time);
 
     this.updateRotation();
     this.filter.render(this.scene, this.camera);

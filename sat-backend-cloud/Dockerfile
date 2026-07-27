@@ -28,7 +28,6 @@ RUN mkdir -p models
 RUN python -c "from huggingface_hub import hf_hub_download; hf_hub_download(repo_id='Bartowski/gemma-2-9b-it-GGUF', filename='gemma-2-9b-it-Q4_K_M.gguf', local_dir='models')"
 
 # Copy the application code last to protect cache layers
-COPY --chown=user main.py .
 COPY --chown=user app/ ./app/
 # CRITICAL FIX: Explicitly copy your local keyword index data into the container image
 COPY --chown=user cloud_corpus.json .
@@ -37,4 +36,4 @@ COPY --chown=user cloud_corpus.json .
 EXPOSE 7860
 
 # Fire up the application server binding to port 7860
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7860"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "7860"]

@@ -1,4 +1,4 @@
-import { ParsedQuestion } from '../../types';
+import type { ParsedQuestion } from '../../types';
 
 export function parseQuestionCard(raw: string): ParsedQuestion | null {
   const pattern =

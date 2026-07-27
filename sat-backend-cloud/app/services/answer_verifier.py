@@ -1,6 +1,7 @@
 import re
 from typing import Tuple, Dict
 from app.config import settings
+from app.core.logger import logger
 
 QUESTION_SHAPE_PATTERN = re.compile(
     r'\*\*Options:\*\*\s*(.*?)\s*\*\*Answer:\*\*\s*(.*?)\s*\*\*Explanation:\*\*\s*([\s\S]*)',
@@ -47,11 +48,10 @@ def verify_math_answer(full_text: str) -> Tuple[str, str]:
         left_val = _coef_to_float(left_raw)
         right_val = _coef_to_float(right_raw)
         if abs(left_val - right_val) < 1e-9:
-            print(
-                f"⚠️ Self-consistency check: explanation contains a degenerate equation "
+            logger.warning(
+                f"Self-consistency check: explanation contains a degenerate equation "
                 f"({left_raw or '1'}x = {right_raw or '1'}x) with no unique solution. "
-                f"Flagging for retry.",
-                flush=True
+                f"Flagging for retry."
             )
             return full_text, "unresolved"
 
@@ -67,19 +67,17 @@ def verify_math_answer(full_text: str) -> Tuple[str, str]:
 
     if len(matching_letters) == 1:
         corrected_letter = matching_letters[0]
-        print(
-            f"⚠️ Self-consistency fix: Answer said {declared_letter} but the explanation "
-            f"computes {computed_value}, matching option {corrected_letter}. Correcting.",
-            flush=True
+        logger.warning(
+            f"Self-consistency fix: Answer said {declared_letter} but the explanation "
+            f"computes {computed_value}, matching option {corrected_letter}. Correcting."
         )
         fixed_answer_raw = re.sub(r'[A-D]', corrected_letter, answer_raw, count=1)
         fixed_text = full_text[:match.start(2)] + fixed_answer_raw + full_text[match.end(2):]
         return fixed_text, "fixed"
 
-    print(
-        f"⚠️ Self-consistency check: explanation computes {computed_value}, which matches "
-        f"NONE of the four options {option_values}. Flagging for retry.",
-        flush=True
+    logger.warning(
+        f"Self-consistency check: explanation computes {computed_value}, which matches "
+        f"NONE of the four options {option_values}. Flagging for retry."
     )
     return full_text, "unresolved"
 

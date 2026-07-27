@@ -1,5 +1,5 @@
 import { API_BASE_URL } from '../config/constants';
-import { ChatRequest } from '../types';
+import type { ChatRequest } from '../types';
 
 export async function sendChatMessage(
   message: string,

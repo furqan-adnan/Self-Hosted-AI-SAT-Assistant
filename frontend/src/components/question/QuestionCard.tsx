@@ -1,4 +1,4 @@
-import { ParsedQuestion } from '../../types';
+import type { ParsedQuestion } from '../../types';
 
 export default function QuestionCard({ data, showCursor }: { data: ParsedQuestion; showCursor: boolean }) {
   return (

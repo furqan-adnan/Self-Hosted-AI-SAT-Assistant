@@ -3,6 +3,7 @@ from fastapi import APIRouter
 from fastapi.responses import StreamingResponse
 from app.models.schemas import ChatRequest
 from app.config import settings
+from app.core.logger import logger
 from app.services.math_generator import should_use_programmatic_math, generate_programmatic_math_question
 from app.services.answer_verifier import chunk_text_for_pseudo_stream, verify_math_answer
 from app.services.rag_service import retrieve_context
@@ -15,7 +16,7 @@ async def chat_with_tutor(request: ChatRequest):
     def event_generator():
         try:
             if should_use_programmatic_math(request.message):
-                print(f"🧮 Programmatic math path triggered for: {request.message!r}", flush=True)
+                logger.info(f"Programmatic math path triggered for: {request.message!r}")
                 question_text = generate_programmatic_math_question(request.message)
                 for piece in chunk_text_for_pseudo_stream(question_text):
                     yield piece
@@ -62,7 +63,7 @@ async def chat_with_tutor(request: ChatRequest):
                 full_text, status = verify_math_answer(full_text)
 
                 if status == "unresolved":
-                    print("🔁 Retrying math question generation once due to self-consistency mismatch...", flush=True)
+                    logger.warning("Retrying math question generation once due to self-consistency mismatch...")
                     retry_prompt = prompt + (
                         "Important: in your previous attempt, either your final computed answer "
                         "did not match any of the four listed options, or the equation you set up "
@@ -82,12 +83,15 @@ async def chat_with_tutor(request: ChatRequest):
                             if retry_status in ("consistent", "fixed"):
                                 full_text, status = retry_fixed_text, retry_status
                     except Exception as retry_error:
-                        print(f"⚠️ Retry generation failed: {retry_error}", flush=True)
+                        logger.error(f"Retry generation failed: {retry_error}")
 
                 for piece in chunk_text_for_pseudo_stream(full_text):
                     yield piece
 
         except Exception as e:
+            logger.error(f"Error in chat stream: {str(e)}")
             yield f"Error encountered: {str(e)}"
+
+    return StreamingResponse(event_generator(), media_type="text/plain")
 
     return StreamingResponse(event_generator(), media_type="text/plain")
