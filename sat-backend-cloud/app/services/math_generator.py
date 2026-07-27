@@ -3,8 +3,13 @@ import random
 from typing import List
 
 MATH_QUESTION_TRIGGER_PATTERN = re.compile(
-    r'\b(give|generate|create|make|practice|quiz|test)\b.{0,40}'
-    r'\b(math|algebra|equations?|percent(?:age)?|average|rate)\b',
+    r'(?:'
+    r'\b(give|generate|create|make|practice|quiz|test|try|want|need|show|get|help|do|start|solve)\b.{0,50}'
+    r'\b(math|maths|algebra|equations?|percent(?:age)?|average|rate|geometry|trigonometry|quadratic|linear)\b'
+    r'|'
+    r'\b(math|maths|algebra|equations?|percent(?:age)?|average|rate|geometry|trigonometry|quadratic|linear)\b.{0,50}'
+    r'\b(question|problem|practice|quiz|test)\b'
+    r')',
     re.IGNORECASE
 )
 MATH_NOTES_EXCLUSION_PATTERN = re.compile(r'\b(notes?|guide|study material|my book)\b', re.IGNORECASE)
