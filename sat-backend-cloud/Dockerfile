@@ -29,6 +29,7 @@ RUN python -c "from huggingface_hub import hf_hub_download; hf_hub_download(repo
 
 # Copy the application code last to protect cache layers
 COPY --chown=user main.py .
+COPY --chown=user app/ ./app/
 # CRITICAL FIX: Explicitly copy your local keyword index data into the container image
 COPY --chown=user cloud_corpus.json .
 

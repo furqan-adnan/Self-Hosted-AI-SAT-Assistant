@@ -1,8 +1,18 @@
-<<<<<<< HEAD
-venv/ 
-frontend/node_modules/ 
-sat-backend-cloud/data/ 
-=======
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# Backend data (large PDFs)
+sat-backend-cloud/data/
+
+# Node / Frontend
+node_modules/
+frontend/dist/
+frontend/node_modules/
+
 # Logs
 logs
 *.log
@@ -12,9 +22,9 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
+# Build artifacts
+dist/
+dist-ssr/
 *.local
 
 # Editor directories and files
@@ -27,4 +37,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
->>>>>>> f3befc6fd6c750e71e10477adbe9577dcafac31d

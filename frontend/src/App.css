@@ -1,33 +1,4 @@
 
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@500;600;700&display=swap");
-
-:root {
-  --ink-900: #030712;
-  --ink-600: #94a3b8;
-  --paper: #030712;
-  --text-primary: #f8fafc;
-  --accent-blue: #3b82f6;
-  --accent-gold: #fbbf24;
-  --success-green: #10b981;
-  --error-red: #f87171;
-  --line: rgba(255, 255, 255, 0.1);
-  --glass: rgba(15, 23, 42, 0.7);
-  --glass-darker: rgba(2, 6, 23, 0.85);
-
-  --font-display: "IBM Plex Serif", Georgia, serif;
-  --font-body: "IBM Plex Sans", system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
-}
-
-/* FIX: Hide global scrollbar */
-html, body {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  height: 100%;
-  width: 100%;
-}
-
 .sat-tutor-app {
   display: flex;
   flex-direction: column;
