@@ -4,6 +4,6 @@ pydantic
 huggingface_hub
 rank_bm25
 numpy
-llama-cpp-python
+llama-cpp-python==0.3.22
 pytest
 httpx
