@@ -17,6 +17,8 @@ function App() {
     isStreaming,
     connection,
     isBusy,
+    modelProvider,
+    setModelProvider,
     sendMessage,
     scrollRef,
   } = useChat();
@@ -38,7 +40,11 @@ function App() {
         />
       </div>
       
-      <SessionBar connection={connection} />
+      <SessionBar 
+        connection={connection} 
+        modelProvider={modelProvider}
+        setModelProvider={setModelProvider}
+      />
 
       <div className="chat-scroll" ref={scrollRef}>
         {messages.length === 0 && (

@@ -17,4 +17,5 @@ export interface ParsedQuestion {
 export interface ChatRequest {
   message: string;
   history: { role: string; content: string }[];
+  model_provider?: 'local' | 'groq';
 }

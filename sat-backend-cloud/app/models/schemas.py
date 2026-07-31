@@ -4,3 +4,5 @@ from pydantic import BaseModel
 class ChatRequest(BaseModel):
     message: str
     history: Optional[List[Dict[str, str]]] = []
+    model_provider: str = "local"
+

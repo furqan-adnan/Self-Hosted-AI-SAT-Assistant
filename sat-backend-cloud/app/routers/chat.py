@@ -10,7 +10,7 @@ from app.services.math_generator import should_use_programmatic_math, generate_p
 from app.services.reading_generator import should_use_programmatic_reading, generate_programmatic_reading_question
 from app.services.answer_verifier import chunk_text_for_pseudo_stream, verify_math_answer
 from app.services.rag_service import retrieve_context
-from app.services.llm_service import format_history, build_prompt, generate_response, generate_response_sync
+from app.services.llm_service import format_history, build_prompt, generate_response, generate_response_sync, generate_groq_response
 
 router = APIRouter()
 llm_lock = threading.Lock()
@@ -34,6 +34,18 @@ def _should_skip_rag(message: str) -> bool:
 async def chat_with_tutor(request: ChatRequest):
     def event_generator():
         try:
+            # 0. Groq API Route (Fast, high-accuracy, 3rd party LLM)
+            if request.model_provider == "groq":
+                logger.info("Routing request to Groq API...")
+                if _should_skip_rag(request.message):
+                    context_str, is_relevant = "", False
+                else:
+                    context_str, is_relevant = retrieve_context(request.message)
+                
+                for chunk in generate_groq_response(request.message, request.history, context_str, is_relevant):
+                    yield chunk
+                return
+
             # 1. Programmatic Math Route (instant, no LLM)
             if should_use_programmatic_math(request.message):
                 logger.info(f"Programmatic math path triggered for: {request.message!r}")

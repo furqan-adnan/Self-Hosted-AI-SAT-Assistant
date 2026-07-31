@@ -3,9 +3,14 @@ import type { ChatRequest } from '../types';
 
 export async function sendChatMessage(
   message: string,
-  history: { role: string; content: string }[]
+  history: { role: string; content: string }[],
+  modelProvider: 'local' | 'groq' = 'local'
 ): Promise<Response> {
-  const payload: ChatRequest = { message, history };
+  const payload: ChatRequest = { 
+    message, 
+    history,
+    model_provider: modelProvider 
+  };
   
   const response = await fetch(`${API_BASE_URL}/api/chat`, {
     method: 'POST',

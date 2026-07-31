@@ -9,6 +9,7 @@ export function useChat() {
   const [statusText, setStatusText] = useState('Reading your message...');
   const [isStreaming, setIsStreaming] = useState(false);
   const [connection, setConnection] = useState<'connected' | 'busy' | 'offline'>('connected');
+  const [modelProvider, setModelProvider] = useState<'local' | 'groq'>('local');
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -41,7 +42,7 @@ export function useChat() {
     const clearAllTimers = () => timers.forEach(clearTimeout);
 
     try {
-      const response = await sendChatMessage(userText, recentHistory);
+      const response = await sendChatMessage(userText, recentHistory, modelProvider);
 
       if (!response.ok) throw new Error('Backend server error');
       if (!response.body) throw new Error('No response body stream received');
@@ -103,6 +104,8 @@ export function useChat() {
     isStreaming,
     connection,
     isBusy,
+    modelProvider,
+    setModelProvider,
     sendMessage,
     scrollRef
   };

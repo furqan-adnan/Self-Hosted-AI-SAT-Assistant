@@ -15,5 +15,7 @@ class Settings:
     STREAM_CHUNK_SIZE = int(os.environ.get("STREAM_CHUNK_SIZE", "24"))
     HISTORY_TRUNCATION_LENGTH = int(os.environ.get("HISTORY_TRUNCATION_LENGTH", "80"))
     CORS_ORIGINS = os.environ.get("CORS_ORIGINS", "https://huggingface.co").split(",")
+    GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
+    GROQ_MODEL = os.environ.get("GROQ_MODEL", "llama-3.3-70b-versatile")
 
 settings = Settings()
